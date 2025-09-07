@@ -1,0 +1,24 @@
+{C:/Users/Youssef ash/Desktop/fft_parallel/coverage.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/Youssef ash/Desktop/fft_parallel/coverage.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling package coverage_sv_unit
+
+Top level modules:
+	--none--
+
+} {} {}} {C:/Users/Youssef ash/Desktop/fft_parallel/fft_dit.sv} {1 {vlog -work work -vopt -sv -stats=none {C:/Users/Youssef ash/Desktop/fft_parallel/fft_dit.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+-- Compiling module fft_dit_pipeline
+
+Top level modules:
+	fft_dit_pipeline
+
+} {} {}} {C:/Users/Youssef ash/Desktop/fft_parallel/fft_dit_tb.sv} {2 {vlog -work work -vopt -sv -stats=none {C:/Users/Youssef ash/Desktop/fft_parallel/fft_dit_tb.sv}
+QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+** Warning: coverage.sv(2): (vlog-13233) Design unit "fft_dit_tb_sv_unit" already exists and will be overwritten. Overwriting SystemVerilog $unit with different source files.
+-- Compiling package fft_dit_tb_sv_unit
+-- Compiling module fft_dit_tb
+
+Top level modules:
+	fft_dit_tb
+
+} {} {}}

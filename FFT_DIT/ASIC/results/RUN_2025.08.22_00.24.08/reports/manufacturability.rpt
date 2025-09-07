@@ -1,0 +1,17 @@
+Design Name: fft_dit
+Run Directory: /home/icpedia/Desktop/OpenLane/designs/fft_dit/runs/assignment/RUN_2025.08.22_00.24.08
+----------------------------------------
+
+Magic DRC Summary:
+Source: /home/icpedia/Desktop/OpenLane/designs/fft_dit/runs/assignment/RUN_2025.08.22_00.24.08/reports/signoff/drc.rpt
+Total Magic DRC violations is 0
+----------------------------------------
+
+LVS Summary:
+Source: /home/icpedia/Desktop/OpenLane/designs/fft_dit/runs/assignment/RUN_2025.08.22_00.24.08/logs/signoff/38-fft_dit.lvs.lef.log
+LVS reports no net, device, pin, or property mismatches.
+Total errors = 0
+----------------------------------------
+
+Antenna Summary:
+No antenna report found.

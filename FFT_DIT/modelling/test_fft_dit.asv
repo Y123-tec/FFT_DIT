@@ -1,0 +1,110 @@
+clear; clc; close all;
+
+% --- Choose type: 'double', 'single', 'FxPt' ---
+T = fft_mytypes('FxPt'); % change to 'FxPt' or 'single' as needed
+
+% DESIGN PARAMETERS
+N = 8;          % FFT length
+nSeeds = 100000;    % Number of random tests
+% Widened random range for inputs (signed 16-bit style)
+ 
+
+
+errors = zeros(1, nSeeds);      % store error norm for each seed
+sqnr_values = zeros(1, nSeeds); % store SQNR for each seed
+
+% Open files ONCE
+fid_in_real  = fopen('fft_input_real_binary.txt', 'w');
+fid_in_imag  = fopen('fft_input_imag_binary.txt', 'w');
+fid_out_real = fopen('fft_output_real_binary.txt', 'w');
+fid_out_imag = fopen('fft_output_imag_binary.txt', 'w');
+
+for seed = 1:nSeeds
+    rng(seed);   % reproducible random values
+
+    % Generate random complex signal
+    real_part = 0.0452* randn(1, N);
+    imag_part = 0.0452*randn(1, N);
+    x = cast((real_part + 1j * imag_part), 'like', T.x);
+
+    % --- Write input data (binary) ---
+    for k = 1:N
+        fprintf(fid_in_real, '%s\n', get_binary_string(real(x(k))));
+        fprintf(fid_in_imag, '%s\n', get_binary_string(imag(x(k))));
+    end
+    fprintf(fid_in_real, '\n'); % blank line between seeds
+    fprintf(fid_in_imag, '\n');
+
+    % Build MEX on first run
+    if seed == 1
+        buildInstrumentedMex('fft_DIT_algo', '-args', {x, T});
+    end
+
+    % Run your custom FFT
+    out_myfft = fft_DIT_algo_mex(x, T);
+
+    % --- Write output data (binary) ---
+    for k = 1:N
+        fprintf(fid_out_real, '%s\n', get_binary_string(real(out_myfft(k))));
+        fprintf(fid_out_imag, '%s\n', get_binary_string(imag(out_myfft(k))));
+    end
+    fprintf(fid_out_real, '\n');
+    fprintf(fid_out_imag, '\n');
+
+    % MATLAB's reference FFT
+    if isfi(x)
+        out_matlab = fft(double(x));
+    else
+        out_matlab = fft(x);
+    end
+
+    % --- Compute Error Norm & SQNR ---
+    errors(seed) = norm(double(out_myfft) - out_matlab);
+    signal_power = sum(abs(out_matlab).^2);
+    noise_power  = sum(abs(double(out_myfft) - out_matlab).^2);
+    sqnr_values(seed) = 10 * log10(signal_power / noise_power);
+
+    fprintf('Seed %d → Error: %.6e, SQNR: %.2f dB\n', ...
+        seed, errors(seed), sqnr_values(seed));
+end
+
+% Close all files AFTER loop
+fclose(fid_in_real);
+fclose(fid_in_imag);
+fclose(fid_out_real);
+fclose(fid_out_imag);
+
+% --- Average SQNR ---
+avg_sqnr = mean(sqnr_values);
+fprintf('\nAverage SQNR over %d seeds: %.2f dB\n', nSeeds, avg_sqnr);
+
+% --- Plot Error Norm ---
+figure;
+plot(1:nSeeds, errors, 'b-', 'LineWidth', 1.5);
+xlabel('Test case index (seed)');
+ylabel('Error Norm');
+title('FFT DIT vs MATLAB FFT - Error Norm');
+grid on;
+
+% --- Plot SQNR ---
+figure;
+plot(1:nSeeds, sqnr_values, 'r-', 'LineWidth', 1.5);
+xlabel('Test case index (seed)');
+ylabel('SQNR (dB)');
+title('FFT DIT vs MATLAB FFT - SQNR per Seed');
+grid on;
+
+% --- Helper: Convert numbers to binary string ---
+function bin_str = get_binary_string(value)
+    if isfi(value)
+        % Fixed-point numbers
+        bin_str = value.bin;
+    elseif isfloat(value)
+        % Floating-point numbers
+        bytes = typecast(value, 'uint8');
+        bin_str = reshape(dec2bin(bytes, 8).', 1, []);
+    else
+        % Integers
+        bin_str = dec2bin(value);
+    end
+end

@@ -68,6 +68,35 @@ This repository contains the full flow of designing, verifying, and implementing
   - No setup/hold violations  
   - No DRC violations  
 
+  
+---
+
+## 📊 Key Results
+- **High-quality FFT core** with SQNR > 90 dB  
+- **Verified RTL** against MATLAB model with full coverage on DUT  
+- **ASIC-ready implementation** on Sky130 with clean timing/DRC  
+
+---
+
+## 🚀 Future Work
+- Extend to larger FFT sizes (16, 32, 64 points)  
+- Explore SDF/MDC architectures for scalability  
+- Optimize power/area for low-power applications  
+
+---
+
+## 🙌 Acknowledgements
+- SkyWater Open PDK  
+- OpenLane ASIC flow  
+- QuestaSim for verification  
+- MATLAB/Fixed-Point Toolbox  
+
+---
+
+📌 Author: **Youssef Ashraf**  
+📅 Date: September 2025
+
+
 ---
 
 ## 📂 Repository Structure
